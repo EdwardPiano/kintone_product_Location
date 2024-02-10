@@ -14,7 +14,7 @@ function Main() {
   const [loading, setLoading] = useState(false) // 是否顯示loading
   const [open, setOpen] = useState(false) // 是否打開彈跳視窗
   const [wareHouse, setWareHouse] = useState(null) // 倉庫的value
-  const [GRLCode, setGRLCode] = useState([]) // 表格填入的value
+  const [ProductCode, setProductCode] = useState([]) // 表格填入的value
 
   // 開啟彈跳視窗
   const openModal = () => {
@@ -24,7 +24,7 @@ function Main() {
   const closeModal = () => {
     setOpen(false)
   }
-  // 檢查GRLCode有沒有重複
+  // 檢查ProductCode有沒有重複
   function hasDuplicates(array) {
     return new Set(array).size !== array.length // Set是一個不可重複的array可以用來檢查有沒有重複
   }
@@ -36,16 +36,16 @@ function Main() {
         constants.showNotification('warning', '未指定', '未指定「更新商品位置」')
         return
       }
-      if (hasDuplicates(GRLCode)) {
-        constants.showNotification('error', 'GRLCode', '「GRL Code」重複，請檢查表格資料')
+      if (hasDuplicates(ProductCode)) {
+        constants.showNotification('error', 'Product Code', '「Product Code」重複，請檢查表格資料')
         return
       }
       setLoading(true)
-      const params = GRLCode.map((GRL) => {
+      const params = ProductCode.map((productCode) => {
         return {
           updateKey: {
-            field: 'GRL_PN',
-            value: GRL,
+            field: 'Product_Code',
+            value: productCode,
           },
           record: {
             商品所在位置: {
@@ -93,7 +93,7 @@ function Main() {
       >
         <WareHouse getData={setWareHouse} />
         <br /> <br />
-        <SubTable getData={setGRLCode} />
+        <SubTable getData={setProductCode} />
       </Modal>
     </ConfigProvider>
   )

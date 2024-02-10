@@ -10,7 +10,7 @@ import constants from '../reference/constants'
 const initialData = [
   {
     key: '1',
-    GRL: '',
+    Code: '',
     Marketing_Name: '',
     PLocation: '',
   },
@@ -24,41 +24,41 @@ function SubTable({ getData }) {
   const inputRef = useRef(null)
 
   // 處理input框的change事件
-  const handleGRLChange = (e, record) => {
+  const handleCodeChange = (e, record) => {
     const newData = [...data] // 解構當前數據
     const index = newData.findIndex((item) => item.key === record.key) // 獲取被修改的table index
     const item = newData[index] // 獲取被修改的哪個object
-    newData.splice(index, 1, { ...item, GRL: e.target.value }) // 刪除原本的值，塞新的進去
+    newData.splice(index, 1, { ...item, Code: e.target.value }) // 刪除原本的值，塞新的進去
     setData(newData) // 重新設定值
   }
 
   // 處理input框的Enter事件
   const handlePressEnter = async (e, record) => {
     try {
-      const query = `GRL_PN = "${e.target.value}"`
+      const query = `Product_Code = "${e.target.value}"`
       const resp = await kintoneAPI.getRecords(kintoneAPI.userRight, constants.RPODUCT_APPID, query)
       if (resp.totalCount === '0') {
-        throw new Error(`GRL_PN:["${e.target.value}"]不存在，請檢查產品資料`)
+        throw new Error(`Product_Code:["${e.target.value}"]不存在，請檢查產品資料`)
       }
       const newData = [...data]
       const index = newData.findIndex((item) => item.key === record.key)
-      const { GRL_PN, Marketing_Name, Location } = resp.records[0]
+      const { Product_Code, Marketing_Name, Location } = resp.records[0]
       const newItem = {
-        GRL: GRL_PN.value,
+        Code: Product_Code.value,
         Marketing_Name: Marketing_Name.value,
         PLocation: Location.value,
       }
       newData.splice(index, 1, { ...record, ...newItem })
-      // 將所有的GRLCode回傳給父組件
+      // 將所有的Code回傳給父組件
       getData(
         newData.reduce((result, cur) => {
-          if (cur.GRL) {
-            result.push(cur.GRL)
+          if (cur.Code) {
+            result.push(cur.Code)
           }
           return result
         }, []),
       )
-      setData([...newData, { key: `${nextKey}`, GRL: '', Marketing_Name: '', PLocation: '' }]) // 重新設定值
+      setData([...newData, { key: `${nextKey}`, Code: '', Marketing_Name: '', PLocation: '' }]) // 重新設定值
       setNextKey(nextKey + 1)
       setFocusLastRow(true)
       setTablePage(Math.ceil((data.length + 1) / 10))
@@ -75,11 +75,11 @@ function SubTable({ getData }) {
     })
     setData(newData)
     setTablePage(Math.ceil(data.length / 10))
-    // 將所有的GRLCode回傳給父組件
+    // 將所有的Code回傳給父組件
     getData(
       newData.reduce((result, cur) => {
-        if (cur.GRL) {
-          result.push(cur.GRL)
+        if (cur.Code) {
+          result.push(cur.Code)
         }
         return result
       }, []),
@@ -97,15 +97,15 @@ function SubTable({ getData }) {
 
   const columns = [
     {
-      title: 'GRL P/N',
-      dataIndex: 'GRL',
+      title: 'Product Code',
+      dataIndex: 'Code',
       render: (text, record) => {
         return (
           <Input
-            placeholder="GRL P/N"
+            placeholder="Product Code"
             value={text}
             onChange={(e) => {
-              handleGRLChange(e, record)
+              handleCodeChange(e, record)
             }}
             onPressEnter={(e) => {
               handlePressEnter(e, record)
