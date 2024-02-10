@@ -1,0 +1,7 @@
+.ant-notification-notice-message {
+  font-size: 23px !important; /* 設定您想要的字體大小 */
+}
+
+.ant-notification-notice-description {
+  font-size: 19px !important; /* 設定您想要的字體大小 */
+}
